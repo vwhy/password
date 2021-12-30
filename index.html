@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <title>随机强密码生成</title>
+  <style>
+    @media (prefers-color-scheme: light) {
+      body {
+        background: white;
+        color: #555;
+      }
+
+      .button {
+        background: rgb(128, 128, 128);
+        color: #FFF;
+        border: 1px solid #ececec;
+        box-shadow: 2px 1px 4px 0px #bcbcbc;
+      }
+
+      .message {
+        color: #FFF;
+        background-color: #67C23A;
+        box-shadow: 5px 3px 15px 1px #a2a2a2;
+      }
+
+      a{
+        text-decoration:none;
+      }
+      a:link {color: #000}
+      a:visited {color: #000}
+      a:hover {color: #000}
+      a:active {color: #000}
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #333;
+        color: rgb(224, 224, 224);
+      }
+
+      .button {
+        background: #333;
+        border: 1px solid #ececec;
+        box-shadow: 2px 1px 4px 0px #313131;
+      }
+
+      .message {
+        color: rgb(224, 224, 224);
+        background: #3a6c21;
+        box-shadow: 2px 1px 4px 0px #313131;
+      }
+
+      a{
+        text-decoration:none;
+        color: rgb(224, 224, 224)
+      }
+      a:link {color: rgb(224, 224, 224)}
+      a:visited {color: rgb(224, 224, 224)}
+      a:hover {color: rgb(159, 159, 159)
+      }
+      a:active {color: rgb(224, 224, 224)}
+    }
+
+    span {
+      cursor: pointer;
+    }
+
+    .header-title {
+      font-size: x-small;
+      width: 100%;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    #result-area {
+      margin: 0 auto;
+      margin-top: 15px;
+      width: 100%;
+      text-align: center;
+      height: 30px;
+      font-size: x-large;
+      border: hidden;
+      letter-spacing: 2px;
+    }
+
+    .message {
+      width: 90%;
+      height: 40px;
+      position: absolute;
+      left: 5%;
+      top: 30%;
+      border-radius: 5px;
+      line-height: 40px;
+      text-align: center;
+      font-size: 1em;
+      animation: dialogOpen .5s;
+      -moz-animation: dialogOpen .5s;
+      /* Firefox */
+      -webkit-animation: dialogOpen .5s;
+      /* Safari 和 Chrome */
+      -o-animation: dialogOpen .5s;
+    }
+
+    @keyframes dialogOpen {
+      0% {
+        -webkit-transform: matrix3d(.7, 0, 0, 0, 0, .7, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(.7, 0, 0, 0, 0, .7, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        opacity: 0
+      }
+
+      3.4% {
+        -webkit-transform: matrix3d(.795, 0, 0, 0, 0, .822, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(.795, 0, 0, 0, 0, .822, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      4.7% {
+        -webkit-transform: matrix3d(.835, 0, 0, 0, 0, .88, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(.835, 0, 0, 0, 0, .88, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      6.81% {
+        -webkit-transform: matrix3d(.898, 0, 0, 0, 0, .968, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(.898, 0, 0, 0, 0, .968, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      9.41% {
+        -webkit-transform: matrix3d(.965, 0, 0, 0, 0, 1.05, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(.965, 0, 0, 0, 0, 1.05, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      10.21% {
+        -webkit-transform: matrix3d(.982, 0, 0, 0, 0, 1.068, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(.982, 0, 0, 0, 0, 1.068, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      13.61% {
+        -webkit-transform: matrix3d(1.037, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.037, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      14.11% {
+        -webkit-transform: matrix3d(1.042, 0, 0, 0, 0, 1.099, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.042, 0, 0, 0, 0, 1.099, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      17.52% {
+        -webkit-transform: matrix3d(1.062, 0, 0, 0, 0, 1.072, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.062, 0, 0, 0, 0, 1.072, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      18.72% {
+        -webkit-transform: matrix3d(1.064, 0, 0, 0, 0, 1.056, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.064, 0, 0, 0, 0, 1.056, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      21.32% {
+        -webkit-transform: matrix3d(1.059, 0, 0, 0, 0, 1.021, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.059, 0, 0, 0, 0, 1.021, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      24.32% {
+        -webkit-transform: matrix3d(1.045, 0, 0, 0, 0, .988, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.045, 0, 0, 0, 0, .988, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      25.23% {
+        -webkit-transform: matrix3d(1.04, 0, 0, 0, 0, .981, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.04, 0, 0, 0, 0, .981, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      29.03% {
+        -webkit-transform: matrix3d(1.019, 0, 0, 0, 0, .969, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.019, 0, 0, 0, 0, .969, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      29.93% {
+        -webkit-transform: matrix3d(1.014, 0, 0, 0, 0, .97, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.014, 0, 0, 0, 0, .97, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      35.54% {
+        -webkit-transform: matrix3d(.994, 0, 0, 0, 0, .989, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(.994, 0, 0, 0, 0, .989, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      36.74% {
+        -webkit-transform: matrix3d(.991, 0, 0, 0, 0, .994, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(.991, 0, 0, 0, 0, .994, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      41.04% {
+        -webkit-transform: matrix3d(.988, 0, 0, 0, 0, 1.007, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(.988, 0, 0, 0, 0, 1.007, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      44.44% {
+        -webkit-transform: matrix3d(.99, 0, 0, 0, 0, 1.01, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(.99, 0, 0, 0, 0, 1.01, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      52.15% {
+        -webkit-transform: matrix3d(.997, 0, 0, 0, 0, 1.002, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(.997, 0, 0, 0, 0, 1.002, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        opacity: 1
+      }
+
+      59.86% {
+        -webkit-transform: matrix3d(1.002, 0, 0, 0, 0, .997, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.002, 0, 0, 0, 0, .997, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      63.26% {
+        -webkit-transform: matrix3d(1.002, 0, 0, 0, 0, .998, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.002, 0, 0, 0, 0, .998, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      75.28% {
+        -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1.001, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1, 0, 0, 0, 0, 1.001, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      85.49%,
+      90.69%,
+      100% {
+        -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+      }
+
+      100% {
+        opacity: 1
+      }
+    }
+
+    .button {
+      height: 20px;
+      width: 60px;
+      margin: 0px 18px;
+      font-size: 1.2em;
+      border-radius: 15px;
+      padding: 3px 15px;
+    }
+
+    .history {
+      width: 100%;
+      margin-top: 30px;
+    }
+
+    .history ul li {
+      height: 40px;
+      line-height: 40px;
+      list-style: none;
+    }
+
+    .history ul li span {
+      float: right;
+      padding-right: 10%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="message" id="msg" hidden>
+    复制成功
+  </div>
+  <div class="header-title">生成随机强密码</div>
+  <div class="view-box div-view" id="result-area">
+  </div>
+  <div style="width: 100%;text-align: center; margin-top: 30px;">
+    <span onclick="generator()" class="button">生成</span>
+    <span onclick="copyTextToClipboard()" class="button">复制</span>
+  </div>
+  <div class="history">
+    <div class="history-list">
+    </div>
+    <div style="width: 100%;text-align: center; margin-top:50px; color: #7c7c7c" onclick="cleanHistory()"
+      id="cleanButton">
+      <span>清除记录</span>
+      <br/>
+    </div>
+  </div>
+
+  <script>
+    let letter = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let symbol = '@#$*()/_';
+    generator();
+    function generator() {
+      let pwd = "";
+      for (i = 0; i < 16; i++) {
+        let index = Math.floor(Math.random() * letter.length + 1) - 1;
+        pwd += letter.charAt(index)
+      }
+      $('#result-area').text(pwd)
+      flushHistoryList(pwd)
+    }
+
+    /*刷新历史记录*/
+    function flushHistoryList(pwd) {
+      let historyArr = JSON.parse(localStorage.getItem('history'));
+      if (!historyArr) {
+        $("#cleanButton").hide()
+        historyArr = []
+      } else {
+        $("#cleanButton").show()
+      }
+      // 展示history 列表
+      let ul = $('<ul></ul>')
+      historyArr.forEach(item => {
+        ul.append('<li>' + item + '<span onclick="copyTextToClipboard(\'' + item + '\')">复制</span></li>')
+      });
+      $(".history-list").html(ul);
+      historyArr.push(pwd)
+      if (historyArr.length > 10) {
+        historyArr.shift(pwd)
+      }
+      // 存储
+      localStorage.setItem('history', JSON.stringify(historyArr));
+    }
+
+    /*清除历史记录*/
+    function cleanHistory() {
+      localStorage.removeItem('history')
+      document.querySelector('#result-area').textContent = '';
+      $("#cleanButton").hide()
+      $(".history-list").html('');
+    }
+
+    /**
+     * https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
+     */
+    function copyTextToClipboard(text) {
+      if (!text) {
+        text = document.querySelector('#result-area').textContent
+      }
+      var textArea = document.createElement("textarea");
+      textArea.style.position = 'fixed';
+      textArea.style.top = 0;
+      textArea.style.left = 0;
+      textArea.style.width = '2em';
+      textArea.style.height = '2em';
+      textArea.style.padding = 0;
+      textArea.style.border = 'none';
+      textArea.style.outline = 'none';
+      textArea.style.boxShadow = 'none';
+      textArea.style.background = 'transparent';
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        var successful = document.execCommand('copy');
+        var msg = successful ? 'successful' : 'unsuccessful';
+        console.log('Copying text command was ' + msg);
+        $("#msg").show()
+        setTimeout(() => {
+          $("#msg").hide()
+        }, 1500);
+      } catch (err) {
+        console.log('Oops, unable to copy');
+      }
+      document.body.removeChild(textArea);
+    }
+  </script>
+</body>
+
+</html>
